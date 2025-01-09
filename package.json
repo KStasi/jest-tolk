@@ -1,15 +1,16 @@
 {
-  "name": "@tonkite/jest-tolk",
-  "version": "0.0.8",
+  "name": "@kstasi/jest-tolk",
+  "version": "0.0.9",
   "main": "dist/index.js",
   "types": "dist/index.js",
   "license": "Apache-2.0",
+  "private": true,
   "files": [
     "dist"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/tonkite/jest-tolk.git"
+    "url": "https://github.com/kstasi/jest-tolk.git"
   },
   "scripts": {
     "build": "tsc",
