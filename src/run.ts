@@ -103,7 +103,7 @@ const runTest: RunTest = async ({
 
     try {
       const start = Date.now();
-      const { output, input } = await runSingleTestCase(
+      const { output, input, debugLogs } = await runSingleTestCase(
         executor,
         code,
         data,
@@ -114,7 +114,7 @@ const runTest: RunTest = async ({
       );
       const end = Date.now();
 
-      validateTestOutput(input, output, annotations);
+      validateTestOutput(input, output, annotations, debugLogs);
       testResults.push(
         createTestResult('passed', testCaseName, annotations, end - start),
       );
@@ -228,24 +228,27 @@ function validateTestOutput(
   input: any[],
   output: GetMethodResultSuccess | GetMethodResultError,
   annotations: TestAnnotations,
+  debugLogs: string,
 ) {
   if (!output.success) {
     throw `Execution failed: ${output.error}`;
   }
 
-  const inputString =
-    input && input.length ? `\n\nInput: ${convertInputToString(input)}` : '';
+  const inputString = input.length
+    ? `\n\nInput: ${convertInputToString(input)}`
+    : '';
+  const debugString = debugLogs ? `\n\nDebug: ${debugLogs}` : '';
 
   if (annotations.exitCode) {
     assert.equal(
       output.vm_exit_code,
       annotations.exitCode,
-      `Test case has thrown an error code ${output.vm_exit_code} (expected ${annotations.exitCode}).${inputString}`,
+      `Test case has thrown an error code ${output.vm_exit_code} (expected ${annotations.exitCode}).${inputString}${debugString}`,
     );
   } else if (output.vm_exit_code !== 0) {
     const stackTrace = extractStackTrace(output.vm_log);
     throw new Error(
-      `Test case has failed with an error code ${output.vm_exit_code}.\n\n[...]\n${stackTrace}${inputString}`,
+      `Test case has failed with an error code ${output.vm_exit_code}.\n\n[...]\n${stackTrace}${inputString}${debugString}`,
     );
   }
 }

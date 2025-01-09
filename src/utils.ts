@@ -52,7 +52,7 @@ export async function runGetMethodWithDefaults({
     verbosity: 'full_location_stack_verbose',
     config: defaultConfig,
     gasLimit: BigInt(gasLimit),
-    debugEnabled: false,
+    debugEnabled: true,
   });
   return { ...result, input: stack };
 }
