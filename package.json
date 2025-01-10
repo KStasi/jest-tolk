@@ -1,6 +1,6 @@
 {
   "name": "@kstasi/jest-tolk",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "main": "dist/index.js",
   "types": "dist/index.js",
   "license": "Apache-2.0",

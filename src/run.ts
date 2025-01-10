@@ -116,7 +116,14 @@ const runTest: RunTest = async ({
 
       validateTestOutput(input, output, annotations, debugLogs);
       testResults.push(
-        createTestResult('passed', testCaseName, annotations, end - start),
+        createTestResult(
+          'passed',
+          testCaseName,
+          annotations,
+          end - start,
+          undefined,
+          output.success ? output.gas_used : undefined,
+        ),
       );
       numPassingTests += 1;
     } catch (error) {
@@ -237,7 +244,7 @@ function validateTestOutput(
   const inputString = input.length
     ? `\n\nInput: ${convertInputToString(input)}`
     : '';
-  const debugString = debugLogs ? `\n\nDebug: ${debugLogs}` : '';
+  const debugString = debugLogs ? `\n\n${debugLogs}` : '';
 
   if (annotations.exitCode) {
     assert.equal(
@@ -300,6 +307,7 @@ function createTestResult(
   annotations: TestAnnotations,
   duration: number,
   error?: unknown,
+  gasUsed?: string,
 ): AssertionResult {
   const failureMessage = error
     ? typeof error === 'string'
@@ -315,7 +323,7 @@ function createTestResult(
     numPassingAsserts: status === 'passed' ? 1 : 0,
     status,
     ancestorTitles: annotations.scope ? [annotations.scope] : [],
-    title,
+    title: title + (gasUsed ? ` (gas: ${gasUsed})` : ''),
     fullName: title,
   };
 }
